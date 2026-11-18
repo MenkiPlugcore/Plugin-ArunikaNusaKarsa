@@ -1,20 +1,12 @@
-# ARUNIKA — Nusa Karsa
+# Nusa Karsa — one-file import
 
-Repository initialization for import of v0.1.0–v1.0.4 (preview), Paper 1.21.11 / Java 21.
+The repository is initialized but historical source/binaries are not imported yet.
 
-The Git bundle delivered in the chat contains 23 reconstructed release tags and 73 original archive files. Download `ArunikaNusaKarsa-through-1.0.4.git.bundle`, then run in the download directory:
+1. Download the verified `ArunikaNusaKarsa-through-1.0.4.git.bundle` attachment from the chat.
+2. Open https://github.com/MenkiPlugcore/Plugin-ArunikaNusaKarsa/upload/main
+3. Drop the file into the root of the repository without renaming it, commit directly to main.
+4. Open https://github.com/MenkiPlugcore/Plugin-ArunikaNusaKarsa/actions and check "Import verified Nusa Karsa history". If automatic execution is unavailable and Actions is enabled, run the workflow manually.
 
-```sh
-git clone -b main ArunikaNusaKarsa-through-1.0.4.git.bundle Plugin-ArunikaNusaKarsa
-cd Plugin-ArunikaNusaKarsa
-git remote set-url origin https://github.com/MenkiPlugcore/Plugin-ArunikaNusaKarsa.git
-git fetch origin main
-git merge --allow-unrelated-histories origin/main -m "Merge GitHub initialization"
-git push origin main --tags
-```
+The workflow verifies SHA-256 `c1345b129b69b7d12cd5ddec2d1fdc1ac96a5fb6a24230696ea4ca883a090779`, fetches the reconstructed commits/tags, merges the source into main, removes the temporary bundle from the current tree and pushes all tags atomically. A local test imported 23 tags and all baseline files, but GitHub-hosted execution awaits the upload.
 
-If Git requests identity or authentication, configure your normal GitHub Git credentials first. Do not use force-push.
-
-Once imported, `main` contains the 1.0.4 editable source, archived release files, Java ItemsAdder rune/book models, Bedrock Geyser packs and mappings, and deployment documentation. v0.5.7 is an asset-only update. v1.0.5 is not included.
-
-This initialization commit does not contain the source or binaries. Preview builds require real Paper, Vault, and Geyser/Floodgate runtime testing. Back up all plugin/WTB/economy data. Do not run a standalone ArunikaWTB JAR alongside the embedded module.
+Expected baseline: v1.0.4 preview, Paper 1.21.11 / Java 21, 73 historical files, Java ItemsAdder models, Bedrock Geyser packs and mappings. Read the imported README and distribution/1.0.4/START-HERE.md before installation. Runtime testing is outstanding. Do not install standalone ArunikaWTB alongside the embedded module.
