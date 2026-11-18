@@ -1,0 +1,41 @@
+name: Import verified Nusa Karsa history
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ArunikaNusaKarsa-through-1.0.4.git.bundle'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: nusa-karsa-history-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify and import the exact approved bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle="ArunikaNusaKarsa-through-1.0.4.git.bundle"
+          if [[ ! -f "$bundle" ]]; then
+            echo "No bundle uploaded; nothing to import."
+            exit 0
+          fi
+          echo "c1345b129b69b7d12cd5ddec2d1fdc1ac96a5fb6a24230696ea4ca883a090779  $bundle" | sha256sum -c -
+          git bundle verify "$bundle"
+          git fetch --no-tags "./$bundle" 'refs/heads/main:refs/remotes/nusakarsa-import/main' 'refs/tags/*:refs/tags/*'
+          test "$(git rev-parse refs/remotes/nusakarsa-import/main)" = aaec29e01a2a382b9798d86b074f762886c52a3d
+          test "$(git tag --list 'v*' | wc -l)" -ge 23
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git merge --allow-unrelated-histories --no-ff --no-commit refs/remotes/nusakarsa-import/main
+          git rm -- "$bundle"
+          git commit -m "Import verified Nusa Karsa v0.1.0 through v1.0.4"
+          git push --atomic origin HEAD:refs/heads/main --tags
